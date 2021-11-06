@@ -1,11 +1,13 @@
 const express = require('express');
 const path = require('path');
-var uniqid = require('uniqid'); 
-const api = require('./db/db.json');
+const fs = require('fs');
+const util = require('util');
+// var uniqid = require('uniqid'); 
+// const api = require('./db/db.json');
 const app = express();
 const PORT = 3001;
 
-app.use('/api', api);
+app.use(express.json());
 // GET /notes should return the notes.html file.
 app.use(express.static('public'));
 
@@ -19,6 +21,16 @@ app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 // GET /api/notes should read the db.json file and return all saved notes as JSON.
+
+const readFromFile = util.promisify(fs.readFile);
+
+/**
+ *  Function to write data to the JSON file given a destination and some content
+ *  @param {string} destination The file you want to write to.
+ *  @param {object} content The content you want to write to the file.
+ *  @returns {void} Nothing
+ */
+
 app.get('/api/notes', (req, res) =>
   readFromFile('./db.json').then((data) => res.json(JSON.parse(data)))
 );
