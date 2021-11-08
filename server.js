@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
-// const uniqid = require('uniqid'); 
+const uniqid = require('uniqid'); 
 const db = require('./db/db.json');
 // const uuid = require('./helpers/uuid'); 
 const app = express();
@@ -71,7 +71,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
       title,
       text,
-      // tip_id: uniqid(),
+      tip_id: uniqid(),
     };
 
     readAndAppend(newNote, './db/db.json');
