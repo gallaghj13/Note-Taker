@@ -5,8 +5,9 @@ const util = require('util');
 const uniqid = require('uniqid'); 
 const db = require('./db/db.json');
 // const uuid = require('./helpers/uuid'); 
-const app = express();
+
 const PORT = process.env.PORT || 3001;
+const app = express();
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
