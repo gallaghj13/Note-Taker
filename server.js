@@ -16,8 +16,6 @@ app.use(express.json());
 // GET /notes should return the notes.html file.
 
 
-app.get('/', (req, res) => res.send('Navigate to /notes or /*'));
-
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/notes.html'))
 );
