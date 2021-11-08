@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const util = require('util');
 const uniqid = require('uniqid'); 
-const db = require('./db/db.json');
+// const db = require('./db/db.json');
 // const uuid = require('./helpers/uuid'); 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -71,7 +71,7 @@ app.post('/api/notes', (req, res) => {
     };
 
     readAndAppend(newNote, './db/db.json');
-    res.json(`Note added successfully`);
+    res.json(newNote);
   } else {
     res.error('Error in adding note');
   }
