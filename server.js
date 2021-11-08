@@ -63,7 +63,7 @@ app.post('/api/notes', (req, res) => {
 
   const { title, text } = req.body;
 
-  if (title & text) {
+  if (title && text) {
     const newNote = {
       title,
       text,
