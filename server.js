@@ -2,9 +2,9 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
-// var uniqid = require('uniqid'); 
+const uniqid = require('uniqid'); 
 // const api = require('./db/db.json');
-const uuid = require('./helpers/uuid'); 
+// const uuid = require('./helpers/uuid'); 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -55,7 +55,7 @@ const readFromFile = util.promisify(fs.readFile);
 };
 
 app.get('/api/notes', (req, res) =>
-  readFromFile('./db.json').then((data) => res.json(JSON.parse(data)))
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
 );
 // POST /api/notes should receive a new note to save on the request body, add it to the db.json file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into npm packages that could do this for you).
 app.post('/api/notes', (req, res) => {
@@ -67,7 +67,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
       title,
       text,
-      note_id: uuid(),
+      note_id: uniqid(),
     };
 
     readAndAppend(newNote, './db/db.json');
