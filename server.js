@@ -1,4 +1,5 @@
 const express = require('express');
+const router = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
@@ -13,15 +14,19 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// GET /notes should return the notes.html file.
-app.get('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/notes.html'))
-);
-// GET * should return the index.html file.
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/index.html'))
-);
 // GET /api/notes should read the db.json file and return all saved notes as JSON.
+// GET /notes should return the notes.html file.
+app.get('/notes', (req, res) => {
+  console.log("notes");
+  res.sendFile(path.join(__dirname, './public/notes.html'))
+});
+
+// GET * should return the index.html file.
+router.get('*', (req, res) => {
+  console.log("get *");
+  res.sendFile(path.join(__dirname, './public/index.html'))
+})
+
 
 const readFromFile = util.promisify(fs.readFile);
 
@@ -68,7 +73,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
       title,
       text,
-      tip_id: uniqid(),
+      id: uniqid(),
     };
 
     readAndAppend(newNote, './db/db.json');
@@ -76,8 +81,21 @@ app.post('/api/notes', (req, res) => {
   }
 });
 // Bonus: DELETE /api/notes/:id should receive a query parameter that contains the id of a note to delete. To delete a note, you'll need to read all notes from the db.json file, remove the note with the given id property, and then rewrite the notes to the db.json file.
+app.delete('/api/notes/:id', (req, res) => {
+  const userId = req.params.id;
+  console.log(req.params.id)
+  // console.log(readFromFile('./db/db.json').then((data) => console.log(JSON.parse(data))))
+  readFromFile('./db/db.json').then((data) => JSON.parse(data))
+  .then((notes) => notes.filter((note) => note.id !== userId))
+  .then((filteredNotes) =>  writeToFile('./db/db.json', filteredNotes))
+  .then(() => res.json({ok: true}))
+  .catch((err) => res.status(500).json(err))
+  // filter or splice from the db.json
+})
+
 
 
 app.listen(PORT, () =>
   console.log(`Example app listening at http://localhost:${PORT}`)
 );
+
